@@ -1,0 +1,12 @@
+# Node_Modules
+
+node_modules/
+
+# Ops
+
+package-lock.json
+.env
+
+# Distribution files
+
+dist/
