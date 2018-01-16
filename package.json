@@ -1,0 +1,9 @@
+{
+  "name": "hrla-scheduler-client",
+  "version": "1.0.0",
+  "description": "React client for HRLA-Scheduler",
+  "scripts": {
+  },
+  "author": "Studio Zephyr",
+  "license": "ISC"
+}
