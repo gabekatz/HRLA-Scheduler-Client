@@ -5,5 +5,5 @@ const title = 'HRLA Scheduler webpack setup';
 
 ReactDOM.render(
   <div>{title}</div>,
-  document.getElementById('app')
+  document.getElementById('root')
 );

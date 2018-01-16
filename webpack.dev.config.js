@@ -4,10 +4,10 @@ const path = require('path');
 const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
 
-const APP_DIR = path.resolve(__dirname, './client/template.index.html');
+const APP_DIR = path.resolve(__dirname, './client/index.jsx');
 const BUILD_DIR = path.resolve(__dirname, './dist');
 const ENV_DIR = path.resolve(__dirname, './client/.env')
-const TEMPLATE_DIR = require('./client/template.index.html');
+const TEMPLATE_DIR = path.resolve(__dirname, './client/template.index.html');
 
 
 const cleanOptions = {
