@@ -14,8 +14,8 @@ const enhancer = applyMiddleware(
   logger(),
 );
 
-function configuerStore() {
+function configureStore() {
   return createStore(Reducer, enhancer);
 };
 
-module.exports = { configuerStore, history };
+module.exports = { configureStore, history };

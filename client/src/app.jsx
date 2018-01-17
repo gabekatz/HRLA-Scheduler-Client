@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 //import component routes
 
 
-import Routes from './routes.jsx';
+// import Routes from './routes.jsx';
 
 class App extends Component {
   constructor(props) {

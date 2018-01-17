@@ -7,7 +7,7 @@ import { configureStore, history } from './src/store/configureStore';
 
 import App from './src/app.jsx';
 
-import './src/app.global.css';
+// import './src/app.global.css';
 
 const title = 'HRLA Scheduler webpack setup';
 const store = configureStore();
