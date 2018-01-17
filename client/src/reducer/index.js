@@ -6,6 +6,7 @@ import { routerReducer as router } from 'react-router-redux';
 
 const Reducer = combineReducers({
   //other reducers
+  router,
 });
 
 export default Reducer;
