@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 //import component routes
-
+import LandingPage from './components/landingPage/landingPage.jsx'
 
 // import Routes from './routes.jsx';
 
@@ -15,7 +15,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        Test
+        <LandingPage />
       </div>
     )
   }
