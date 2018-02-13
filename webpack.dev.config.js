@@ -38,6 +38,11 @@ module.exports = {
     ]
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      "window.jQuery": "jquery",
+      "moment": "moment"
+  }),
     new CleanWebpackPlugin(['dist'], cleanOptions),
     new HTMLWebpackPlugin({
       template: TEMPLATE_DIR,
