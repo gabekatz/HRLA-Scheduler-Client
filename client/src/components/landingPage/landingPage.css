@@ -5,7 +5,23 @@ body {
   font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
 }
 
-#calendar {
-  width: 900px;
-  margin: 0 auto;
+.calendars > * {
+  width:300px;
+  display: inline-block;
 }
+
+#calendar1 {
+  width: 400px;
+}
+
+.fc-content {
+  text-align: center !important;
+}
+
+/* #calendar2 > .fc-axis {
+  display: none;
+}
+
+#calendar1 > .fc-axis {
+  display: block;
+} */

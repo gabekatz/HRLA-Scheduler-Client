@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import axios from 'axios';
 
 import fc from 'fullcalendar';
 import view from 'fullcalendar';
@@ -15,39 +16,64 @@ class Landing extends Component {
   }
 
   componentDidMount() {
-    $('#calendar').fullCalendar({
-      header: {
-				left: 'prev,next today',
-				center: 'title',
-				right: 'month,agendaWeek,agendaDay'
-			},
-      defaultView: 'agendaDay',
-      editable: true,
-      eventSources: [
-        {
-          url: '/room1.php',
-          color: 'blue',
-          textColor: 'white'
+
+    for (let i = 1; i < 5; i++){
+      $(`#calendar${i}`).fullCalendar({
+        header: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'month,agendaWeek,agendaDay'
         },
-        {
-          url: '/room2.php',
-          color: 'yellow',
-          textColor: 'black'
-        }
-      ],
-      resources: [
-          // resources go here
-      ]
-      // other options go here...)
-  })
-}
+        allDayText: i === 1 ? 'Room #' : '' 
+        ,
+        contentHeight: 800,
+        minTime:"09:00:00",
+        defaultView: 'agendaDay',
+        editable: true,
+        slotLabetimelFormat: '',
+        events: (start, end, timezone, callback) => {
+          let events = [
+            {
+              allDay: true,
+              title: i,
+              start: '2018-02-13',
+            }
+          ];
+          axios.get(`/api/event/id=${i}`)
+            .then(({ data }) => {
+              console.log(`successful call to retrieve from room ${i},`, data)
+              data.forEach((e) => {
+                events.push({
+                  title: e.title,
+                  start: e.start,
+                  end: e.end,
+                })
+  
+              })
+              callback(events)
+              console.log(events)
+            })
+            .catch((err) => {
+              console.log(err);
+            })
+        },
+        resources: [
+        ]
+      })
+    }
+
+    $('.fc-axis').hide();
+    $('#calendar1').find('.fc-axis').show();
+
+  }
 
   render() {
     return (
-      <div className="GCAL">
-        <div id="calendar">
-        </div>
-        {/* <LandingView /> */}
+      <div className="calendars">
+        <div id="calendar1"></div>
+        <div id="calendar2"></div>
+        <div id="calendar3"></div>
+        <div id="calendar4"></div>
       </div>
     )
   }
