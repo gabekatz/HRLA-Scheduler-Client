@@ -41,7 +41,8 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: "jquery",
       "window.jQuery": "jquery",
-      "moment": "moment"
+      "moment": "moment",
+      "fullcalendar": "fullcalendar"
   }),
     new CleanWebpackPlugin(['dist'], cleanOptions),
     new HTMLWebpackPlugin({
