@@ -61,8 +61,8 @@ class Landing extends Component {
                   start: e.start,
                   end: e.end,
                 })
-                let start = (Number(e.start.slice(11,13)) * 2 - e.start.slice(14,16 === '00' ? 0 : 1)) - 18;
-                let end = (Number(e.end.slice(11,13)) * 2- e.end.slice(14,16 === '00' ? 0 : 1))  - 18;
+                let start = (Number(e.start.slice(11,13)) * 2 - e.start.slice(14,16) === '00' ? 0 : 1) - 18;
+                let end = (Number(e.end.slice(11,13)) * 2- e.end.slice(14,16) === '00' ? 0 : 1)  - 18;
                 this.state.grid[i - 1].fill(1, start, end);
                 console.log(e.start.slice(11,13), e.end.slice(11,13));
               })
@@ -90,12 +90,28 @@ class Landing extends Component {
         if (!ele) {
           let btn = document.createElement("a");
           btn.className ='fc-time-grid-event fc-v-event fc-event fc-start fc-end fc-draggable fc-resizable';
-          btn.id = [i + 1, j]
+          let timeDigit = (j + 18) / 2;
+          let hours = Math.floor(timeDigit);
+          let minutes = timeDigit !== hours ? '30' : '00';
+          let timeMoment = '' + hours + ':' + minutes + ':00'
+          let endMinutes = minutes === '00' ? '30' : '00'
+          let endHour = endMinutes === '00' ? hours + 1 : hours
+          let endTimeMoment = '' + endHour + ':' + endMinutes + ':00'
+          btn.id = [i + 1, j];
           btn.style.top = j * 22  + 3 + 'px';
           btn.style.bottom = (j + 1) * -22 + 3 + 'px';
-          btn.style.left = '0%'
-          btn.style.right = '0%'
+          btn.style.left = '0%';
+          btn.style.right = '0%';
           btn.style.zIndex = 1;
+          btn.onclick = function () {
+            console.log(timeMoment, endTimeMoment);
+            axios.post(`/api/event/id=${i + 1}`, {
+              title:'newTest',
+              start: `2018-02-13T${timeMoment}`,
+              end: `2018-02-13T${endTimeMoment}`,
+              owner: 'Admin'
+            })
+          }
           document.getElementById(`calendar${i + 1}`).getElementsByClassName('fc-event-container')[1].appendChild(btn);
 
         }
