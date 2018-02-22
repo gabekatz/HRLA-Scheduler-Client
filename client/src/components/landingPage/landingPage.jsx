@@ -20,8 +20,14 @@ class Landing extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      grid: []
+      grid: [],
+      selectedStartTime: '',
+      nextTime: '',
+      selectedEndTime: '',
+      selectedRoom: '',
+      dropdownMessage: 'Select end time'
     }
+    this.submitTime = this.submitTime.bind(this);
   }
 
   componentDidMount() {
@@ -137,6 +143,12 @@ class Landing extends Component {
             console.log('button clicked', $('#timeSlots'))
             $('#timeSlots').modal('show')
             console.log(timeMoment, endTimeMoment);
+            this.setState({
+              selectedStartTime: timeMoment
+            });
+            this.populateOptions();
+            // this.state.selectedStartTime = timeMoment;
+            console.log('state of time', this.state.selectedStartTime)
             // axios.post(`/api/event/id=${i + 1}`, {
             //   title: 'newTest',
             //   start: `2018-02-13T${timeMoment}`,
@@ -158,7 +170,7 @@ class Landing extends Component {
           btn.style.right = '0%';
           btn.style.zIndex = 1;
           btn.onclick = () => {
-            console.log(timeMoment, endTimeMoment);
+            // console.log(timeMoment, endTimeMoment);
             // axios.post(`/api/event/id=${i + 1}`, {
             //   title: 'newTest',
             //   start: `2018-02-13T${timeMoment}`,
@@ -173,8 +185,35 @@ class Landing extends Component {
     })
   }
 
-  getModal() {
-    return 
+  populateOptions() {
+    this.state.nextTime = this.state.selectedStartTime;
+    for (let i = 0; i < 5; i++) {
+      let time = this.state.nextTime;
+      let hour = time.slice(0, 2);
+      let minutes = time.slice(3, 5);
+      let option = document.createElement('option');
+      option.className = 'dropdown-item';
+      let nextTime = minutes === '00' ? hour + ':30' : '' + (Number(hour) + 1) + ':00';
+      this.state.nextTime = nextTime + ':00';
+      option.text = nextTime;
+      $('.dropdown-menu').append(option);
+      option.onclick = () => {
+        this.setState({
+          dropdownMessage: nextTime,
+          selectedEndTime: nextTime
+        })
+      }
+    }
+  }
+
+  submitTime() {
+    console.log('submitting start as:', this.state.selectedStartTime, 'and end as:', this.state.selectedEndTime);
+    axios.post(`/api/event/id=${i + 1}`, {
+      title: 'newTest',
+      start: `2018-02-13T${timeMoment}`,
+      end: `2018-02-13T${endTimeMoment}`,
+      owner: 'Admin'
+    })
   }
 
   render() {
@@ -192,12 +231,13 @@ class Landing extends Component {
               <div className="modal-body">
                 <div className="dropdown">
                   <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Select Time Slot
-            </button>
+                    {this.state.dropdownMessage}
+                  </button>
                   <div className="dropdown-menu">
                   </div>
                 </div>
                 <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" onClick={this.submitTime} data-dismiss="modal">Submit</button>
                   <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
               </div>
