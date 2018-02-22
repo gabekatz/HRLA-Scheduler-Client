@@ -87,8 +87,8 @@ class Landing extends Component {
                     start: e.start,
                     end: e.end,
                   })
-                  let start = (Number(e.start.slice(11, 13)) * 2 + (e.start.slice(14, 16) === '00' ? 0 : 1)) - 18;
-                  let end = (Number(e.end.slice(11, 13)) * 2 + (e.end.slice(14, 16) === '00' ? 0 : 1)) - 18;
+                  let start = this.convertToGrid(e.start.slice(11));
+                  let end = this.convertToGrid(e.end.slice(11));
                   console.log('start: ', start, 'end: ', end, 'for row:', i)
                   console.log('starthour slice:', e.start.slice(11, 13), 'endhour slice:', e.end.slice(11, 13));
                   this.state.grid[i - 1].fill(1, start, end);
@@ -141,6 +141,7 @@ class Landing extends Component {
           btn.onclick = () => {
             //overlay to prompt user for times
             console.log('button clicked', $('#timeSlots'))
+            $('.dropdown-menu').empty();
             $('#timeSlots').modal('show')
             console.log(timeMoment, endTimeMoment);
             this.setState({
@@ -196,6 +197,7 @@ class Landing extends Component {
       option.className = 'dropdown-item';
       let nextTime = minutes === '00' ? hour + ':30' : '' + (Number(hour) + 1) + ':00';
       this.state.nextTime = nextTime + ':00';
+      console.log('gridspot', this.state.grid[this.state.selectedRoom], this.convertToGrid(nextTime), this.state.grid[this.state.selectedRoom - 1][this.convertToGrid(nextTime)], 'in room: ', this.state.selectedRoom)
       option.text = nextTime;
       $('.dropdown-menu').append(option);
       option.onclick = () => {
@@ -204,7 +206,15 @@ class Landing extends Component {
           selectedEndTime: nextTime + ':00'
         })
       }
+      if (this.state.grid[this.state.selectedRoom - 1][this.convertToGrid(nextTime)]) {
+        return;
+      }
+
     }
+  }
+
+  convertToGrid(time) {
+    return (Number(time.slice(0, 2)) * 2 + (time.slice(3, 5) === '00' ? 0 : 1)) - 18
   }
 
   submitTime() {
