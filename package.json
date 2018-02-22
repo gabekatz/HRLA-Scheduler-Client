@@ -23,6 +23,8 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "bluebird": "^3.5.1",
+    "e": "0.0.4",
     "fullcalendar": "^3.8.2",
     "moment": "^2.20.1",
     "react": "^16.2.0",
