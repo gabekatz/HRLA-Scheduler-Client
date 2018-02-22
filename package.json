@@ -24,6 +24,7 @@
   "dependencies": {
     "axios": "^0.17.1",
     "bluebird": "^3.5.1",
+    "bootstrap": "^4.0.0",
     "e": "0.0.4",
     "fullcalendar": "^3.8.2",
     "moment": "^2.20.1",

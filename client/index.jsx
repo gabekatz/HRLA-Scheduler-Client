@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 
+// import '../node_modules/bootstrap/dist/js/bootstrap.bundle';
+
 import { configureStore, history } from './src/store/configureStore';
 
 import App from './src/app.jsx';

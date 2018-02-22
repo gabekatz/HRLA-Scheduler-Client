@@ -10,6 +10,7 @@ import Promise from 'bluebird';
 import LandingView from './landingPageView.jsx';
 
 require('../../../../node_modules/fullcalendar/dist/fullcalendar.css');
+import '../../../../node_modules/bootstrap/dist/js/bootstrap.bundle';
 
 
 import './landingPage.css';
@@ -132,24 +133,23 @@ class Landing extends Component {
           btn.style.right = '0%';
           btn.style.zIndex = 1;
           btn.onclick = () => {
+            //overlay to prompt user for times
+            console.log('button clicked', $('#timeSlots'))
+            $('#timeSlots').modal('show')
             console.log(timeMoment, endTimeMoment);
-            axios.post(`/api/event/id=${i + 1}`, {
-              title: 'newTest',
-              start: `2018-02-13T${timeMoment}`,
-              end: `2018-02-13T${endTimeMoment}`,
-              owner: 'Admin'
-            })
-            // this.setState({
-            //   grid: []
+            // axios.post(`/api/event/id=${i + 1}`, {
+            //   title: 'newTest',
+            //   start: `2018-02-13T${timeMoment}`,
+            //   end: `2018-02-13T${endTimeMoment}`,
+            //   owner: 'Admin'
             // })
-            // this.getCalendars();
           }
           document.getElementById(`calendar${i + 1}`)
-          .getElementsByClassName('fc-event-container')[1]
-          .appendChild(btn);
+            .getElementsByClassName('fc-event-container')[1]
+            .appendChild(btn);
 
         } else if (ele === 0) {
-//should not repeat find a way to min this
+          //should not repeat find a way to min this
 
           btn.id = [i + 1, j];
           btn.style.top = j * 22 + 3 + 'px';
@@ -159,13 +159,13 @@ class Landing extends Component {
           btn.style.zIndex = 1;
           btn.onclick = () => {
             console.log(timeMoment, endTimeMoment);
-            axios.post(`/api/event/id=${i + 1}`, {
-              title: 'newTest',
-              start: `2018-02-13T${timeMoment}`,
-              end: `2018-02-13T${endTimeMoment}`,
-              owner: 'Admin'
-            })
-            window.location.reload(false)
+            // axios.post(`/api/event/id=${i + 1}`, {
+            //   title: 'newTest',
+            //   start: `2018-02-13T${timeMoment}`,
+            //   end: `2018-02-13T${endTimeMoment}`,
+            //   owner: 'Admin'
+            // })
+            // window.location.reload(false)
           }
           document.getElementById(`calendar${i + 1}`).getElementsByClassName('fc-event-container')[1].appendChild(btn);
         }
@@ -173,13 +173,45 @@ class Landing extends Component {
     })
   }
 
+  getModal() {
+    return 
+  }
+
   render() {
     return (
-      <div id="calendars">
-        <div id="calendar1"></div>
-        <div id="calendar2"></div>
-        <div id="calendar3"></div>
-        <div id="calendar4"></div>
+      <div>
+        <div className="modal fade" id='timeSlots' role='dialog' ref={modal => this.modal = modal}>
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Modal title</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <div className="dropdown">
+                  <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Select Time Slot
+            </button>
+                  <div className="dropdown-menu">
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div id="calendars">
+          <div id="calendar1"></div>
+          <div id="calendar2"></div>
+          <div id="calendar3"></div>
+          <div id="calendar4"></div>
+        </div>
       </div>
     )
   }
