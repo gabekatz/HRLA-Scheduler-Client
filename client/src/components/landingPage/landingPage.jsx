@@ -144,7 +144,8 @@ class Landing extends Component {
             $('#timeSlots').modal('show')
             console.log(timeMoment, endTimeMoment);
             this.setState({
-              selectedStartTime: timeMoment
+              selectedStartTime: timeMoment,
+              selectedRoom: i + 1
             });
             this.populateOptions();
             // this.state.selectedStartTime = timeMoment;
@@ -200,7 +201,7 @@ class Landing extends Component {
       option.onclick = () => {
         this.setState({
           dropdownMessage: nextTime,
-          selectedEndTime: nextTime
+          selectedEndTime: nextTime + ':00'
         })
       }
     }
@@ -208,10 +209,10 @@ class Landing extends Component {
 
   submitTime() {
     console.log('submitting start as:', this.state.selectedStartTime, 'and end as:', this.state.selectedEndTime);
-    axios.post(`/api/event/id=${i + 1}`, {
-      title: 'newTest',
-      start: `2018-02-13T${timeMoment}`,
-      end: `2018-02-13T${endTimeMoment}`,
+    axios.post(`/api/event/id=${this.state.selectedRoom}`, {
+      title: 'newerTest',
+      start: `2018-02-13T${this.state.selectedStartTime}`,
+      end: `2018-02-13T${this.state.selectedEndTime}`,
       owner: 'Admin'
     })
   }
