@@ -87,8 +87,8 @@ class Landing extends Component {
                     start: e.start,
                     end: e.end,
                   })
-                  let start = this.convertToGrid(e.start.slice(11));
-                  let end = this.convertToGrid(e.end.slice(11));
+                  let start = this.convertToGridIdx(e.start.slice(11));
+                  let end = this.convertToGridIdx(e.end.slice(11));
                   console.log('start: ', start, 'end: ', end, 'for row:', i)
                   console.log('starthour slice:', e.start.slice(11, 13), 'endhour slice:', e.end.slice(11, 13));
                   this.state.grid[i - 1].fill(1, start, end);
@@ -131,10 +131,16 @@ class Landing extends Component {
         let endMinutes = minutes === '00' ? '30' : '00';
         let endHour = endMinutes === '00' ? hours + 1 : hours;
         let endTimeMoment = '' + endHour + ':' + endMinutes + ':00';
-        if (ele === 0 && arr[j + 1] === 0 && j % 2 === 0) {
+        if (ele === 0) {
+          let mult = 1
+          if (arr[j + 1] === 0 && j % 2 === 0) {
+            mult = 2
+          } else if (arr[j - 1] === 0 && j % 2 === 1) {
+            mult = 0
+          }
           btn.id = [i + 1, j];
           btn.style.top = j * 22 + 3 + 'px';
-          btn.style.bottom = (j + 2) * -22 + 3 + 'px';
+          btn.style.bottom = (j + mult) * -22 + 3 + 'px';
           btn.style.left = '0%';
           btn.style.right = '0%';
           btn.style.zIndex = 1;
@@ -142,7 +148,7 @@ class Landing extends Component {
             //overlay to prompt user for times
             console.log('button clicked', $('#timeSlots'))
             $('.dropdown-menu').empty();
-            $('#timeSlots').modal('show')
+            $('#timeSlots').modal('show');
             console.log(timeMoment, endTimeMoment);
             this.setState({
               selectedStartTime: timeMoment,
@@ -162,33 +168,63 @@ class Landing extends Component {
             .getElementsByClassName('fc-event-container')[1]
             .appendChild(btn);
 
-        } else if (ele === 0) {
-          //should not repeat find a way to min this
+          // } else if (ele === 0) {
+          //   //should not repeat find a way to min this
 
-          btn.id = [i + 1, j];
-          btn.style.top = j * 22 + 3 + 'px';
-          btn.style.bottom = (j + 1) * -22 + 3 + 'px';
-          btn.style.left = '0%';
-          btn.style.right = '0%';
-          btn.style.zIndex = 1;
-          btn.onclick = () => {
-            // console.log(timeMoment, endTimeMoment);
-            // axios.post(`/api/event/id=${i + 1}`, {
-            //   title: 'newTest',
-            //   start: `2018-02-13T${timeMoment}`,
-            //   end: `2018-02-13T${endTimeMoment}`,
-            //   owner: 'Admin'
-            // })
-            // window.location.reload(false)
-          }
-          document.getElementById(`calendar${i + 1}`).getElementsByClassName('fc-event-container')[1].appendChild(btn);
+          //   btn.id = [i + 1, j];
+          //   btn.style.top = j * 22 + 3 + 'px';
+          //   btn.style.bottom = (j + 1) * -22 + 3 + 'px';
+          //   btn.style.left = '0%';
+          //   btn.style.right = '0%';
+          //   btn.style.zIndex = 1;
+          //   btn.onclick = () => {
+          //     // console.log(timeMoment, endTimeMoment);
+          //     // axios.post(`/api/event/id=${i + 1}`, {
+          //     //   title: 'newTest',
+          //     //   start: `2018-02-13T${timeMoment}`,
+          //     //   end: `2018-02-13T${endTimeMoment}`,
+          //     //   owner: 'Admin'
+          //     // })
+          //     // window.location.reload(false)
+          //   }
+          //   document.getElementById(`calendar${i + 1}`).getElementsByClassName('fc-event-container')[1].appendChild(btn);
+          // }
         }
       })
     })
   }
 
   populateOptions() {
+    
     this.state.nextTime = this.state.selectedStartTime;
+    let idx = this.convertToGridIdx(this.state.selectedStartTime);
+    let hourIdx = idx % 2 === 0 ? idx : idx - 1;
+    console.log(idx, hourIdx)
+    if (!this.state.grid[this.state.selectedRoom][hourIdx]) {
+      let hourSlot = document.createElement('option');
+      hourSlot.text = this.state.selectedStartTime.slice(0, 2) + ':00';
+      hourSlot.onClick = () => {
+        this.setState({
+          selectedStartTime: hourSlot.text
+        })
+      }
+      $('#startTimes').find('.dropdown-menu').append(hourSlot);
+    }
+
+    if (!this.state.grid[this.state.selectedRoom][hourIdx + 1]) {
+      let halfHourSlot = document.createElement('option');
+      halfHourSlot.text = this.state.selectedStartTime.slice(0, 2) + ':30';
+      halfHourSlot.onClick = () => {
+        this.setState({
+          selectedStartTime: halfHourSlot.text
+        })
+      }
+      $('#startTimes').find('.dropdown-menu').append(halfHourSlot);
+    }
+
+    // let currentSlot = document.createElement('option');
+    // currentSlot.text = this.state.selectedStartTime.slice(0, 5);
+    // $('#startTimes').find('.dropdown-menu').append(currentSlot);
     for (let i = 0; i < 5; i++) {
       let time = this.state.nextTime;
       let hour = time.slice(0, 2);
@@ -197,23 +233,23 @@ class Landing extends Component {
       option.className = 'dropdown-item';
       let nextTime = minutes === '00' ? hour + ':30' : '' + (Number(hour) + 1) + ':00';
       this.state.nextTime = nextTime + ':00';
-      console.log('gridspot', this.state.grid[this.state.selectedRoom], this.convertToGrid(nextTime), this.state.grid[this.state.selectedRoom - 1][this.convertToGrid(nextTime)], 'in room: ', this.state.selectedRoom)
+      console.log('gridspot', this.state.grid[this.state.selectedRoom], this.convertToGridIdx(nextTime), this.state.grid[this.state.selectedRoom - 1][this.convertToGridIdx(nextTime)], 'in room: ', this.state.selectedRoom)
       option.text = nextTime;
-      $('.dropdown-menu').append(option);
+      $('#endTimes').find('.dropdown-menu').append(option);
       option.onclick = () => {
         this.setState({
           dropdownMessage: nextTime,
           selectedEndTime: nextTime + ':00'
         })
       }
-      if (this.state.grid[this.state.selectedRoom - 1][this.convertToGrid(nextTime)]) {
+      if (this.state.grid[this.state.selectedRoom - 1][this.convertToGridIdx(nextTime)]) {
         return;
       }
 
     }
   }
 
-  convertToGrid(time) {
+  convertToGridIdx(time) {
     return (Number(time.slice(0, 2)) * 2 + (time.slice(3, 5) === '00' ? 0 : 1)) - 18
   }
 
@@ -240,7 +276,15 @@ class Landing extends Component {
                 </button>
               </div>
               <div className="modal-body">
-                <div className="dropdown">
+                <div className="dropdown" id="startTimes">
+                  <div> Select Start Time </div>
+                  <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {this.state.selectedStartTime.slice(0, 5)}
+                  </button>
+                  <div className="dropdown-menu">
+                  </div>
+                </div>
+                <div className="dropdown" id="endTimes">
                   <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {this.state.dropdownMessage}
                   </button>
